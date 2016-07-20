@@ -1,108 +1,63 @@
 <html>
 <head>
     <title>Book List</title>
-    <script src="https://code.jquery.com/jquery-2.2.4.min.js"
-            integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.7/angular.min.js"></script>
-
+    <link rel="stylesheet" type="text/css" href="css/styles.css">
     <script src="js/bookList.js"></script>
-    <style>
-        body {
-            overflow: hidden;
-            margin: 0;
-            padding: 0;
-        }
-
-        #mainContainer {
-            overflow: auto;
-            height: 100%;
-            padding: 10px;
-        }
-
-        table {
-            border-collapse: collapse;
-        }
-
-        th {
-            border-bottom: 1px solid;
-        }
-
-        td, th {
-            border-left: 1px solid;
-            padding: 5px 10px;
-        }
-
-        td:first-child, th:first-child {
-            border-left: none;
-        }
-
-        .sortorder:after {
-            content: '\25b2';
-        }
-
-        .sortorder.reverse:after {
-            content: '\25bc';
-        }
-
-        .top {
-            background: red;
-        }
-    </style>
+    <script src="js/infiniteScroll.js"></script>
 </head>
 <body ng-app="bookList">
     <div ng-controller="bookListController" id="mainContainer">
-        <select ng-model="bookSearch.author.gender">
+        Author gender: <select ng-model="bookSearch.author.gender">
             <option value="">Select Category</option>
             <option value="Male">Male</option>
             <option value="Female">Female</option>
         </select>
-
-        <select ng-model="bookSearch.genre"
+        <br>
+        Book genre: <select ng-model="bookSearch.genre"
                 ng-options="genre for genre in genreList"
                 ng-disabled="halloween">
             <option value="">Select Category</option>
         </select>
-
+        <br>
         <label>
-            <input type="checkbox" ng-model="halloween" ng-change="horrorHalloween()">
             Horror on Halloween
+            <input type="checkbox" ng-model="halloween" ng-change="horrorHalloween()">
         </label>
 
-        <table>
-            <tr>
-                <th>
-                    <button ng-click="sortBy('name')">Book name</button>
-                    <span class="sortorder" ng-show="propertyName === 'name'" ng-class="{reverse: reverse}"></span>
-                </th>
-                <th>
-                    <button ng-click="sortBy('author.name')">Author name</button>
-                    <span class="sortorder" ng-show="propertyName === 'author.name'" ng-class="{reverse: reverse}"></span>
-                </th>
-                <th>
-                    <button ng-click="sortBy('author.gender')">Gender</button>
-                    <span class="sortorder" ng-show="propertyName === 'author.gender'" ng-class="{reverse: reverse}"></span>
-                </th>
-                <th>
-                    <button ng-click="sortBy('genre')">Genre</button>
-                    <span class="sortorder" ng-show="propertyName === 'genre'" ng-class="{reverse: reverse}"></span>
-                </th>
-                <th>
-                    <button ng-click="sortBy('publisData')">Publis data</button>
-                    <span class="sortorder" ng-show="propertyName === 'publisData'" ng-class="{reverse: reverse}"></span>
-                </th>
-            </tr>
-            <tr class="item" ng-repeat="book in bookList | filter:bookSearch:filterBooks  | orderBy:propertyName:reverse">
-                <td>{{book.name}}</td>
-                <td>{{book.author.name}}</td>
-                <td>{{book.author.gender}}</td>
-                <td>{{book.genre}}</td>
-                <td>{{book.publishData}}</td>
-            </tr>
+        <table id="mainTable">
+            <thead>
+                <tr>
+                    <th>
+                        <button ng-click="sortBy('name')">Book name</button>
+                        <span class="sortorder" ng-show="propertyName === 'name'" ng-class="{reverse: reverse}"></span>
+                    </th>
+                    <th>
+                        <button ng-click="sortBy('author.name')">Author name</button>
+                        <span class="sortorder" ng-show="propertyName === 'author.name'" ng-class="{reverse: reverse}"></span>
+                    </th>
+                    <th>
+                        Gender
+                    </th>
+                    <th>
+                        Genre
+                    </th>
+                    <th>
+                        Publish data
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="item" ng-repeat="book in bookList | filter:bookSearch:filterBooks  | orderBy:propertyName:reverse">
+                    <td>{{book.name}}</td>
+                    <td>{{book.author.name}}</td>
+                    <td>{{book.author.gender}}</td>
+                    <td>{{book.genre}}</td>
+                    <td>{{book.publishData}}</td>
+                </tr>
+            </tbody>
         </table>
-
-        <!--<ul>-->
-            <!--<li ng-repeat="book in bookList | filter:bookSearch:filterBooks"></li>-->
-        <!--</ul>-->
     </div>
 </body>
 </html>

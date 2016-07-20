@@ -1,0 +1,41 @@
+body {
+    overflow: hidden;
+    margin: 0;
+    padding: 0;
+}
+
+#mainContainer {
+    overflow: auto;
+    height: 100%;
+    padding: 10px;
+}
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+th {
+    border-bottom: 1px solid;
+}
+
+td, th {
+    border-left: 1px solid;
+    padding: 5px 10px;
+}
+
+td:first-child, th:first-child {
+    border-left: none;
+}
+
+.sortorder:after {
+    content: '\25b2';
+}
+
+.sortorder.reverse:after {
+    content: '\25bc';
+}
+
+button {
+    cursor: pointer;
+}

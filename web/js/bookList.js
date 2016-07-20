@@ -1,78 +1,17 @@
 (function () {
+    "use strict";
 	angular.module("bookList", [])
 		.controller("bookListController", ["$scope", "$http", function ($scope, $http) {
 
 			var bookListUrl = "/bookList10000.json";
+            var loadedBooks = 200;
 			var moreItems = 25;
-			var booksPageSize = 100;
-			var booksStartPosition = 0;
-			var booksEndPosition = booksPageSize;
+
 			var books = [];
 
 			$scope.bookSearch = {};
 			$scope.propertyName = "";
 			$scope.halloween = false;
-
-			function scrollIntoView() {
-				var myContainer = $('#mainContainer');
-				var scrollTo = $(".top");
-				if (!scrollTo.length) {
-					markTop();
-					scrollIntoView();
-					return;
-				}
-
-				myContainer.scrollTop(scrollTo.offset().top - myContainer.offset().top + myContainer.scrollTop());
-			}
-
-			window.addItemsTop = function () {
-				$scope.bookList.splice(booksEndPosition - moreItems, moreItems);
-				[].splice.apply($scope.bookList, books.slice(booksStartPosition - moreItems, booksStartPosition));
-				$scope.$apply();
-				booksStartPosition -= moreItems;
-				booksEndPosition -= moreItems;
-				scrollIntoView();
-			};
-
-			window.addItemsBottom = function () {
-				$scope.bookList.splice(booksStartPosition, moreItems);
-				[].push.apply($scope.bookList, books.slice(booksEndPosition, booksEndPosition + moreItems));
-				$scope.$apply();
-				booksStartPosition += moreItems;
-				booksEndPosition += moreItems;
-				scrollIntoView();
-			};
-
-			function markTop() {
-				var cutoff = $(window).scrollTop();
-				$('.item').removeClass('top').each(function () {
-					if ($(this).offset().top > cutoff) {
-						$(this).addClass('top');
-						return false; // stops the iteration after the first one on screen
-					}
-				});
-			}
-
-			$('#mainContainer').scroll(function () {
-				markTop();
-				if ($(this).scrollTop() + $(this).innerHeight() >= this.scrollHeight) {
-					addItemsBottom();
-				} else if ($(this).scrollTop() <= 0) {
-					addItemsTop()
-				}
-			});
-
-			//$('#mainContainer').on('scroll', function (a,b,c,d) {
-			//	if ($(this).scrollTop() + $(this).innerHeight() >= this.scrollHeight) {
-			//		console.log('end reached');
-			//	}
-			//	else if ($(this).scrollTop() <= 0) {
-			//		console.log('Top reached');
-			//	}
-			//	else {
-			//		console.log("AAAAAAAAAA");
-			//	}
-			//});
 
 			var days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 
@@ -84,13 +23,20 @@
 					+ date.getFullYear();
 			}
 
+            function capitalizeFirstLetter(string) {
+                return string.charAt(0).toUpperCase() + string.slice(1);
+            }
+
 			$http.get(bookListUrl).then(function (req) {
 				req.data.forEach(function (book) {
 					book.publishData = formatDate(new Date(book.publishData));
+                    book.author.gender = capitalizeFirstLetter(book.author.gender);
 				});
-				console.log(req.data.length);
+				console.log("Obtained list length: ", req.data.length);
 				books = req.data;
-				$scope.bookList = req.data.slice(booksStartPosition, booksEndPosition);
+                var infiniteScroller = new InfiniteScroller($scope, loadedBooks, moreItems, req.data);
+                infiniteScroller.start();
+                window.infiniteScroller = infiniteScroller; // debug purposes
 			});
 
 			$scope.horrorHalloween = function () {
