@@ -4,13 +4,14 @@ This is an example of an implementation of a long list with AngularJS.
 
 Features:
 - Infinite scroll
-- Sort by book name
-- Sort by author name
-- Filter by author gender
-- Filter by genre
-- Filter the horror books published on Halloween
+- Sort by book name *
+- Sort by author name *
+- Filter by author gender *
+- Filter by genre *
+- Filter the horror books published on Halloween *
 
---------
+(* Read TO-DO section)
+
 Generate the book list
 ----------------
 In this example we are using a list of books. This is an example of book:
@@ -27,17 +28,17 @@ In this example we are using a list of books. This is an example of book:
 
 ### Generate the authors
 To generate the list of books we first generate a list of authors:	(from project root)
-
+	
 	node listGenerator/generateAuthors.js
 This will generate a file called *authorList.json* with one million authors that will be used later to generate the books. You can change the length of the list by modifying the "maxListLength" variable.
 
 ### Generate the books
-Remember that to be able to generate the books we need to have the authors generated previously. This is done in a separated process to allow you reuse the list of authors for multiple lists of books.
+Remember that to be able to generate the books we need to have the authors generated previously. This is done in a separated process to allow you reuse the list of authors for multiple lists of books. 
 
 	node listGenerator/generateBooks.js
 This will create a file called *booksList.json* with one million books. You can change the length of the list by modifying the "maxListLength" variable.
 
-----------
+
 
 Run the web
 -------------
@@ -53,12 +54,14 @@ The web is located in the folder "web". To run it you can use the tool you usual
 	cd web
 	python -m SimpleHTTPServer 8000
 
----------------------------
-TODO:
+
+TO-DO
 -----------
+- Fix filtering and sorting: now they are only applied to the displayed items.
 - Make it look pretty: This is just the bare minimum to make it work.
 - Make the filters and headers stay visible when scrolling: only the body of the table should scroll.
-- Add functional tests.
+- Add tests.
+
 
 Implementation decisions
 ------------
